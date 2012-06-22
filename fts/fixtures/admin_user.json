@@ -1,0 +1,38 @@
+[
+  {
+    "pk": 1, 
+    "model": "auth.user", 
+    "fields": {
+      "username": "arkham", 
+      "first_name": "", 
+      "last_name": "", 
+      "is_active": true, 
+      "is_superuser": true, 
+      "is_staff": true, 
+      "last_login": "2012-06-22T07:46:04.022Z", 
+      "groups": [], 
+      "user_permissions": [], 
+      "password": "pbkdf2_sha256$10000$H2CFqerVxaum$Y1vtuFJ1d0auQG803LX7CfeExIs+zQfOTxSQXr8vFSA=", 
+      "email": "ju.liu@welaika.com", 
+      "date_joined": "2012-06-21T20:16:04.673Z"
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "auth.user", 
+    "fields": {
+      "username": "admin", 
+      "first_name": "", 
+      "last_name": "", 
+      "is_active": true, 
+      "is_superuser": true, 
+      "is_staff": true, 
+      "last_login": "2012-06-22T07:49:23Z", 
+      "groups": [], 
+      "user_permissions": [], 
+      "password": "pbkdf2_sha256$10000$PfTPFqCWayEK$x28D8VrNsTCKIozEID/uJYzTt5D8tPgNOHXyb2c0tkM=", 
+      "email": "", 
+      "date_joined": "2012-06-22T07:49:23Z"
+    }
+  }
+]
