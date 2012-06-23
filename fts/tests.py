@@ -24,11 +24,15 @@ POLL2 = PollInfo(
 class PollsTest(LiveServerTestCase):
     fixtures = ['admin_user.json']
 
-    def setUp(self):
-        self.browser = webdriver.Firefox()
+    @classmethod
+    def setUpClass(cls):
+        cls.browser = webdriver.Firefox()
+        super(PollsTest, cls).setUpClass()
 
-    def tearDown(self):
-        self.browser.quit()
+    @classmethod
+    def tearDownClass(cls):
+        super(PollsTest, cls).tearDownClass()
+        cls.browser.quit()
 
     def test_can_create_new_poll_via_admin_site(self):
         self.login_as_admin()
