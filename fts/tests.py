@@ -31,58 +31,12 @@ class PollsTest(LiveServerTestCase):
         self.browser.quit()
 
     def test_can_create_new_poll_via_admin_site(self):
-        self.browser.get(self.live_server_url + '/admin/')
-
-        body = self.browser.find_element_by_tag_name('body')
-        self.assertIn('Django administration', body.text)
-
-        username_field = self.browser.find_element_by_name('username')
-        username_field.send_keys('admin')
-
-        password_field = self.browser.find_element_by_name('password')
-        password_field.send_keys('adm1n')
-        password_field.send_keys(Keys.RETURN)
+        self.login_as_admin()
 
         body = self.browser.find_element_by_tag_name('body')
         self.assertIn('Site administration', body.text)
 
-        polls_links = self.browser.find_elements_by_link_text('Polls')
-        self.assertEquals(len(polls_links), 2)
-
-        polls_links[1].click()
-
-        body = self.browser.find_element_by_tag_name('body')
-        self.assertIn('0 polls', body.text)
-
-        new_poll_link = self.browser.find_element_by_link_text('Add poll')
-        new_poll_link.click()
-
-        body = self.browser.find_element_by_tag_name('body')
-        self.assertIn('Question:', body.text)
-        self.assertIn('Date published:', body.text)
-
-        question_field = self.browser.find_element_by_name('question')
-        question_field.send_keys('How awesome is TDD?')
-
-        date_field = self.browser.find_element_by_name('pub_date_0')
-        date_field.send_keys('01/01/2012')
-        time_field = self.browser.find_element_by_name('pub_date_1')
-        time_field.send_keys('00:00')
-
-        choice_1 = self.browser.find_element_by_name('choice_set-0-choice')
-        choice_1.send_keys('Very awesome')
-        choice_2 = self.browser.find_element_by_name('choice_set-1-choice')
-        choice_2.send_keys('Quite awesome')
-        choice_3 = self.browser.find_element_by_name('choice_set-2-choice')
-        choice_3.send_keys('Moderately awesome')
-
-        save_button = self.browser.find_element_by_css_selector("input[value='Save']")
-        save_button.click()
-
-        new_poll_links = self.browser.find_elements_by_link_text(
-                "How awesome is TDD?"
-                )
-        self.assertEquals(len(new_poll_links), 1)
+        self.create_poll(POLL1)
 
     def login_as_admin(self):
         self.browser.get(self.live_server_url + '/admin/')
@@ -95,7 +49,10 @@ class PollsTest(LiveServerTestCase):
         password_field.send_keys(Keys.RETURN)
 
     def create_poll(self, poll):
-        self.browser.find_elements_by_link_text('Polls')[1].click()
+        polls_links = self.browser.find_elements_by_link_text('Polls')
+        self.assertEquals(len(polls_links), 2)
+        polls_links[1].click()
+
         self.browser.find_element_by_link_text('Add poll').click()
 
         question_field = self.browser.find_element_by_name('question')
