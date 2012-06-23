@@ -1,0 +1,7 @@
+Django==1.4
+South==0.7.5
+factory-boy==1.1.4
+mock==0.8.0
+selenium==2.24.0
+wsgiref==0.1.2
+yolk==0.4.3
