@@ -2,7 +2,7 @@
   <body>
       <h1>Polls</h1>
       {% for poll in polls %}
-        <p>{{ poll.question }}</p>
+      <p><a href="{% url polls.views.poll poll.id %}">{{ poll.question }}</a></p>
       {% endfor %}
   </body>
 </html>

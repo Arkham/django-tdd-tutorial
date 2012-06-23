@@ -131,7 +131,7 @@ class PollsTest(LiveServerTestCase):
         self.assertEquals(heading.text, 'Polls')
 
         first_poll_title = 'How awesome is TDD?'
-        self.browser.find_elements_by_link_text(first_poll_title).click()
+        self.browser.find_element_by_link_text(first_poll_title).click()
 
         main_heading = self.browser.find_element_by_tag_name('h1')
         self.assertEquals(main_heading.text, 'Poll Results')
@@ -140,7 +140,46 @@ class PollsTest(LiveServerTestCase):
         body = self.browser.find_element_by_tag_name('body')
         self.assertIn('Nobody has voted on this poll yet', body.text)
 
-        self.fail('TODO')
+        choice_inputs = self.browser.find_elements_by_css_selector(
+                "input[type='radio']"
+        )
+        self.assertEquals(len(choice_inputs), 3)
 
+        choice_labels = self.browser.find_elements_by_tag_name('label')
+        choices_text = [c.text for c in choice_labels]
+        self.assertEquals(choices_text, [
+            'Vote:',
+            'Very awesome',
+            'Quite awesome',
+            'Moderately awesome',
+        ])
 
+        chosen = self.browser.find_element_by_css_selector(
+                "input[value='1']"
+        )
+        chosen.click()
 
+        self.browser.find_element_by_css_selector(
+                "input[type='submit']"
+        ).click()
+
+        body_text = self.browser.find_element_by_tag_name('body').text
+        self.assertIn('100 %: Very awesome', body_text)
+
+        self.assertIn('1 vote', body_text)
+        self.assertNotIn('1 votes', body_text)
+
+        self.browser.find_element_by_css_selector("input[value='1']").click()
+        self.browser.find_element_by_css_selector("input[type='submit']").click()
+
+        body_text = self.browser.find_element_by_tag_name('body').text
+        self.assertIn('100 %: Very awesome', body_text)
+        self.assertIn('2 votes', body_text)
+
+        self.browser.find_element_by_css_selector("input[value='2']").click()
+        self.browser.find_element_by_css_selector("input[type='submit']").click()
+
+        body_text = self.browser.find_element_by_tag_name('body').text
+        self.assertIn('67 %: Very awesome', body_text)
+        self.assertIn('33 %: Quite awesome', body_text)
+        self.assertIn('3 votes', body_text)

@@ -28,6 +28,25 @@ class PollModelTest(TestCase):
         p.question = 'How is the cake?'
         self.assertEquals(unicode(p), 'How is the cake?')
 
+    def test_poll_can_tell_you_its_total_number_of_votes(self):
+        poll1 = Poll(question='who?', pub_date=timezone.now())
+        poll1.save()
+        choice1 = Choice(poll=poll1, choice="me", votes=0)
+        choice1.save()
+        choice2 = Choice(poll=poll1, choice="you", votes=0)
+        choice2.save()
+
+        self.assertEquals(poll1.total_votes(), 0)
+
+        choice1.votes = 100
+        choice1.save()
+        choice2.votes = 22
+        choice2.save()
+
+        self.assertEquals(poll1.total_votes(), 122)
+
+class ChoiceModelTest(TestCase):
+
     def test_creating_some_choices_for_a_poll(self):
         poll = Poll()
         poll.question = "What's up?"
@@ -52,31 +71,21 @@ class PollModelTest(TestCase):
         choice = Choice()
         self.assertEquals(choice.votes, 0)
 
-class HomePageViewTest(TestCase):
-
-    def test_root_url_show_all_polls(self):
-        poll1 = Poll(question='6 times 7', pub_date=timezone.now())
+    def test_choice_can_calculate_its_own_percentage_of_votes(self):
+        poll1 = Poll(question='who?', pub_date=timezone.now())
         poll1.save()
-        poll2 = Poll(question='life, the universe and everything', pub_date=timezone.now())
-        poll2.save()
+        choice1 = Choice(poll=poll1, choice="me", votes=2)
+        choice1.save()
+        choice2 = Choice(poll=poll1, choice="you", votes=1)
+        choice2.save()
 
-        response = self.client.get('/')
+        self.assertEquals(choice1.percentage(), 100 * 2 / 3.0)
+        self.assertEquals(choice2.percentage(), 100 * 1 / 3.0)
 
-        self.assertIn(poll1.question, response.content)
-        self.assertIn(poll2.question, response.content)
+        choice1.votes = 0
+        choice1.save()
+        choice2.votes = 0
+        choice2.save()
 
-    def test_root_url_show_links_to_all_polls(self):
-        poll1 = Poll(question='6 times 7', pub_date=timezone.now())
-        poll1.save()
-        poll2 = Poll(question='life, the universe and everything', pub_date=timezone.now());
-        poll2.save()
-
-        response = self.client.get('/')
-
-        self.assertTemplateUsed(response, 'home.html')
-
-        polls_in_context = response.context['polls']
-        self.assertEquals(list(polls_in_context), [poll1, poll2])
-
-        self.assertIn(poll1.question, response.content)
-        self.assertIn(poll2.question, response.content)
+        self.assertEquals(choice1.percentage(), 0)
+        self.assertEquals(choice2.percentage(), 0)

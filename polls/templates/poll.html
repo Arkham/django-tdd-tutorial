@@ -1,0 +1,27 @@
+<html>
+  <body>
+    <h1>Poll Results</h1>
+
+    <h2>{{ poll.question }}</h2>
+
+    <ul>
+      {% for choice in poll.choice_set.all %}
+      <li>{{ choice.percentage|floatformat:0 }} %: {{ choice.choice }}</li>
+      {% endfor %}
+    </ul>
+
+    {% if poll.total_votes == 0 %}
+      <p>Nobody has voted on this poll yet</p>
+    {% else %}
+      <p>{{ poll.total_votes }} vote{{ poll.total_votes|pluralize}}</p>
+    {% endif %}
+
+    <h3>Add your vote</h3>
+    <form action="" method="POST">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input type="submit" />
+    </form>
+
+  </body>
+</html>
