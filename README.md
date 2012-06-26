@@ -1,1 +1,1 @@
-A djando TDD tutorial.
+A djando TDD tutorial, following http://www.tdd-django-tutorial.com/
